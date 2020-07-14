@@ -16,13 +16,10 @@
  *  http://manuals-backend.z-wave.info/make.php?lang=en&sku=ZWS12%20RU&cert=ZC10-18036065
  */
 metadata {
-	definition (name: "Fakro Skylight Opener", namespace: "robcos.com", author: "Roberto Cosenza", ocfDeviceType: "oic.d.garagedoor") {
+	definition (name: "Fakro Skylight Opener", namespace: "robcos.com", author: "Roberto Cosenza") {
 		capability "Switch"
         capability "Actuator"
-
 		capability "Door Control"
-		capability "Contact Sensor"
-		capability "Sensor"
 	}
 }
 
@@ -56,8 +53,7 @@ def zwaveEvent(physicalgraph.zwave.commands.switchmultilevelv1.SwitchMultilevelR
 def updateTile() {
 	logger.trace("updateTile")
     def result = []
-    log.debug("Setting contact and door to ${state.switchState}")
-  	result << createEvent(name: "contact", value: state.switchState, displayed: false)
+    log.debug("Setting door to ${state.switchState}")
     result << createEvent(name: "door", value: state.switchState, displayed: false)
 	result
 }

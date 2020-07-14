@@ -24,46 +24,6 @@ metadata {
 		capability "Contact Sensor"
 		capability "Refresh"
 		capability "Sensor"
-
-		fingerprint inClusters: "0x66, 0x98, 0x71, 0x72", deviceJoinName: "Garage Door"
-		fingerprint deviceId: "0x4007", inClusters: "0x98", deviceJoinName: "Garage Door"
-		fingerprint deviceId: "0x4006", inClusters: "0x98", deviceJoinName: "Garage Door"
-		fingerprint mfr:"014F", prod:"4744", model:"3030", deviceJoinName: "Linear Garage Door" //Linear GoControl Garage Door Opener
-		fingerprint mfr:"014F", prod:"4744", model:"3530", deviceJoinName: "GoControl Garage Door" //GoControl Smart Garage Door Controller
-	}
-
-	simulator {
-		status "closed": "command: 9881, payload: 00 66 03 00"
-		status "opening": "command: 9881, payload: 00 66 03 FE"
-		status "open": "command: 9881, payload: 00 66 03 FF"
-		status "closing": "command: 9881, payload: 00 66 03 FC"
-		status "unknown": "command: 9881, payload: 00 66 03 FD"
-
-		reply "988100660100": "command: 9881, payload: 00 66 03 FC"
-		reply "9881006601FF": "command: 9881, payload: 00 66 03 FE"
-	}
-
-	tiles {
-		standardTile("toggle", "device.door", width: 2, height: 2) {
-			state("unknown", label:'${name}', action:"refresh.refresh", icon:"st.doors.garage.garage-open", backgroundColor:"#ffffff")
-			state("closed", label:'${name}', action:"door control.open", icon:"st.doors.garage.garage-closed", backgroundColor:"#00a0dc", nextState:"opening")
-			state("open", label:'${name}', action:"door control.close", icon:"st.doors.garage.garage-open", backgroundColor:"#e86d13", nextState:"closing")
-			state("opening", label:'${name}', icon:"st.doors.garage.garage-opening", backgroundColor:"#e86d13")
-			state("closing", label:'${name}', icon:"st.doors.garage.garage-closing", backgroundColor:"#00a0dc")
-
-		}
-		standardTile("open", "device.door", inactiveLabel: false, decoration: "flat") {
-			state "default", label:'open', action:"door control.open", icon:"st.doors.garage.garage-opening"
-		}
-		standardTile("close", "device.door", inactiveLabel: false, decoration: "flat") {
-			state "default", label:'close', action:"door control.close", icon:"st.doors.garage.garage-closing"
-		}
-		standardTile("refresh", "device.door", inactiveLabel: false, decoration: "flat") {
-			state "default", label:'', action:"refresh.refresh", icon:"st.secondary.refresh"
-		}
-
-		main "toggle"
-		details(["toggle", "open", "close", "refresh"])
 	}
 }
 
@@ -329,6 +289,15 @@ def zwaveEvent(physicalgraph.zwave.Command cmd) {
     updateDoor()
 }
 
+def on() {
+	log.trace("on")
+    open()
+}
+
+def off() {
+	log.trace("off")
+    close()
+}
 
 def open() {
 	log.trace("Open")
